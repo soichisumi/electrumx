@@ -594,6 +594,32 @@ class BitcoinSV(BitcoinMixin, Coin):
     ]
     GENESIS_ACTIVATION = 620_538
 
+class ECash(BitcoinMixin, Coin):
+    NAME = "eCash"
+    SHORTNAME = "XEC"
+    TX_COUNT = 265479628
+    TX_COUNT_HEIGHT = 556592
+    TX_PER_BLOCK = 400
+    PEERS = [
+        'ecash.fmarcosh.xyz s50002',
+        'electrum.bitcoinabc.org s50002',
+        'electrum.bytesofman.com s50002',
+        'fulcrum-main.bchjs.cash s50002',
+        'fulcrum.pepipierre.fr s50002',
+    ]
+    BLOCK_PROCESSOR = block_proc.LTORBlockProcessor
+
+    @classmethod
+    def warn_old_client_on_tx_broadcast(cls, client_ver):
+        if client_ver < (3, 3, 4):
+            return ('<br/><br/>'
+                    'Your transaction was successfully broadcast.<br/><br/>'
+                    'However, you are using a VULNERABLE version of Electron Cash.<br/>'
+                    'Download the latest version from this web site ONLY:<br/>'
+                    'https://electroncash.org/'
+                    '<br/><br/>')
+        return False
+
 
 class BitcoinCash(BitcoinMixin, Coin):
     NAME = "BitcoinCash"
@@ -862,10 +888,30 @@ class BitcoinSVScalingTestnet(BitcoinSVTestnet):
             return 100
         return 3
 
+class ECashTestnet(BitcoinTestnetMixin, Coin):
+    '''Bitcoin Testnet for Bitcoin Cash daemons.'''
+    NAME = "eCash"
+    SHORTNAME = "XEC"
+    PEERS = [
+        'telectrum.bitcoinabc.org s60002',
+    ]
+    BLOCK_PROCESSOR = block_proc.LTORBlockProcessor
+
+    @classmethod
+    def warn_old_client_on_tx_broadcast(cls, client_ver):
+        if client_ver < (3, 3, 4):
+            return ('<br/><br/>'
+                    'Your transaction was successfully broadcast.<br/><br/>'
+                    'However, you are using a VULNERABLE version of Electron Cash.<br/>'
+                    'Download the latest version from this web site ONLY:<br/>'
+                    'https://electroncash.org/'
+                    '<br/><br/>')
+        return False
 
 class BitcoinCashTestnet(BitcoinTestnetMixin, Coin):
     '''Bitcoin Testnet for Bitcoin Cash daemons.'''
     NAME = "BitcoinCash"
+    SHORTNAME = "BCH"
     PEERS = [
         'bch0.kister.net t s',
         'testnet.imaginary.cash t50001 s50002',
